@@ -1,11 +1,13 @@
 import scrapy as sp
 
+
 class FunkSpider(sp.Spider):
     name = 'funk-lyrics'
-    start_urls = ['https://m.letras.mus.br/mais-acessadas/artistas/funk/']
+    start_urls = ['https://www.letras.mus.br/mais-acessadas/funk/']
 
     def parse(self, response):
         url = 'https://m.letras.mus.br'
+
         artists_links = response.css('ol.top-list_art li a::attr(href)')
 
         for link in artists_links:
@@ -27,11 +29,10 @@ class FunkSpider(sp.Spider):
         lyrics = ''
         for text in song_paragraphs:
             lyrics += text.get().lower() + '\\n'
-            # print(text.get())
-            # print('\n')
-        
-        yield {
-            'artist' : artist.get(),
-            'song_title' : song_title.get(),
-            'lyrics' : lyrics
-        }
+
+        if len(lyrics):
+            yield {
+                'artist' : artist.get(),
+                'song_title' : song_title.get(),
+                'lyrics' : lyrics
+            }
